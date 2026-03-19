@@ -1,8 +1,8 @@
 import pygame
 import sys
 import math
-from ArenaPvE.config import *
-from ArenaPvE.units import *
+from config import *
+from units import *
 
 
 class Game:
