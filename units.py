@@ -52,7 +52,8 @@ class Tower:
                 if isinstance(e, StaticLavaUnit):
                     progress_to_compare = 0
                 else:
-                    if e.is_phantom and self.type != TOWER_SNIPER:
+                    # Can't target invisible enemies (except sniper)
+                    if e.invisible and self.type != TOWER_SNIPER:
                         continue
                     progress_to_compare = e.path_progress
                 if progress_to_compare > max_progress_found:
@@ -217,6 +218,10 @@ class Enemy:
         self.spawns_on_death = data.get('spawns_on_death', False)
         self.spawned_hp = data.get('spawned_hp', 0)
         self.is_armored = data.get('is_armored', False)
+        
+        # Invisibility state (only for phantoms, but attribute exists for all)
+        self.invisible = self.is_phantom  # start invisible if phantom
+        self.invisibility_timer = 0
 
     def current_speed(self):
         s = self.initial_speed + self.speed_boost
@@ -227,17 +232,30 @@ class Enemy:
         return max(0.1, s)
 
     def take_damage(self, damage, proj_type):
+        # Phantom can only take damage when NOT invisible
+        if self.is_phantom and self.invisible:
+            return  # immune while invisible
+            
         if self.is_armored and proj_type != PROJECTILE_SPLASH:
             damage = max(1, damage - 5)
 
+        # Hit removes invisibility (like original behavior, only for homing? keep as was)
         if self.is_phantom and proj_type == PROJECTILE_HOMING and damage > 0:
-            self.is_phantom = False
+            self.invisible = False
+            self.invisibility_timer = 0
 
         self.health -= damage
 
     def update(self):
         if self.health <= 0:
             return True
+
+        # Update phantom invisibility cycle (toggle every 2 seconds)
+        if self.is_phantom:
+            self.invisibility_timer += 1
+            if self.invisibility_timer >= 2 * FPS:
+                self.invisibility_timer = 0
+                self.invisible = not self.invisible  # switch between visible and invisible
 
         self.speed_boost = max(0, self.speed_boost - 0.005)
 
@@ -286,9 +304,8 @@ class Enemy:
             self.frozen_timer = duration
 
     def draw(self, s):
-        color = self.color
-
-        if self.is_phantom:
+        # Draw invisible phantom as translucent
+        if self.is_phantom and self.invisible:
             temp_surface = pygame.Surface((ENEMY_SIZE, ENEMY_SIZE), pygame.SRCALPHA)
             temp_surface.fill((255, 255, 255, 0))
             pygame.draw.circle(temp_surface, (self.color[0], self.color[1], self.color[2], 50),
@@ -296,6 +313,8 @@ class Enemy:
             s.blit(temp_surface, (int(self.x - self.radius), int(self.y - self.radius)))
             return
 
+        # Draw visible enemy normally
+        color = self.color
         pygame.draw.circle(s, color, (int(self.x), int(self.y)), self.radius)
         pygame.draw.circle(s, BLACK, (int(self.x), int(self.y)), self.radius, 1)
 
@@ -491,6 +510,3 @@ class ArmyBaseProjectile(Projectile):
 
     def draw(self, s):
         pass
-
-
-

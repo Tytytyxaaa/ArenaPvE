@@ -50,6 +50,7 @@ ENEMY_TANK = 3
 ENEMY_LAVA = 4
 ENEMY_PHANTOM = 5
 ENEMY_ARMORED = 6
+ENEMY_BOSS1 = 7
 
 TOWERS = {
     TOWER_SNIPER: [
@@ -108,12 +109,13 @@ TOWERS = {
 }
 
 ENEMIES = {
-    ENEMY_NORMAL: {'health': 15, 'speed': 1.0, 'color': GREEN, 'reward': 10},
-    ENEMY_FAST: {'health': 10, 'speed': 2.0, 'color': YELLOW, 'reward': 15},
-    ENEMY_TANK: {'health': 50, 'speed': 0.5, 'color': RED, 'reward': 30},
+    ENEMY_NORMAL: {'health': 15, 'speed': 1.0, 'color': GREEN, 'reward': 15},
+    ENEMY_FAST: {'health': 10, 'speed': 2.0, 'color': YELLOW, 'reward': 10},
+    ENEMY_TANK: {'health': 50, 'speed': 0.5, 'color': RED, 'reward': 25},
     ENEMY_LAVA: {'health': 150, 'speed': 0.8, 'color': LAVA_COLOR, 'reward': 50, 'spawns_on_death': True, 'spawned_hp': 60},
     ENEMY_PHANTOM: {'health': 60, 'speed': 3.0, 'color': PHANTOM_COLOR, 'reward': 20, 'is_phantom': True},
     ENEMY_ARMORED: {'health': 100, 'speed': 1.0, 'color': ARMORED_COLOR, 'reward': 40, 'is_armored': True},
+    ENEMY_BOSS1: {'health': 200, 'speed': 1.0, 'color': GREEN, 'reward': 150}
 }
 
 DIFFICULTY_EASY = 1
@@ -130,11 +132,11 @@ ENEMY_PATH_SHORT_FINAL = [
 ]
 
 WAVES_BASE = []
-WAVES_BASE.append([(ENEMY_NORMAL, 7), (ENEMY_FAST, 2)])  # 1
+WAVES_BASE.append([(ENEMY_NORMAL, 7), (ENEMY_FAST, 4)])  # 1
 WAVES_BASE.append([(ENEMY_NORMAL, 10),(ENEMY_TANK, 4)])  # 2
 WAVES_BASE.append([(ENEMY_TANK, 5), (ENEMY_FAST, 7)])  # 3
 WAVES_BASE.append([(ENEMY_TANK, 4), (ENEMY_PHANTOM, 3)])  # 4
-WAVES_BASE.append([(ENEMY_FAST, 5), (ENEMY_TANK, 5)])  # 5
+WAVES_BASE.append([(ENEMY_FAST, 5), (ENEMY_TANK, 5)])  # 5 в будущем босс
 WAVES_BASE.append([(ENEMY_LAVA, 2), (ENEMY_PHANTOM, 5), (ENEMY_ARMORED, 3)])  # 6
 
 def generate_waves(base_waves, num_waves, scale_factor):
@@ -157,7 +159,7 @@ WAVES_HARD = generate_waves(WAVES_BASE, 40, 2)
 DIFFICULTY_SETTINGS = {
     DIFFICULTY_EASY: {'name': 'Легкий', 'path': ENEMY_PATH_STANDARD, 'waves': WAVES_EASY, 'lives': 30, 'money': 700},
     DIFFICULTY_MEDIUM: {'name': 'Средний', 'path': ENEMY_PATH_STANDARD, 'waves': WAVES_MEDIUM, 'lives': 20, 'money': 500},
-    DIFFICULTY_HARD: {'name': 'Тяжелый', 'path': ENEMY_PATH_SHORT_FINAL, 'waves': WAVES_HARD, 'lives': 10, 'money': 300},
+    DIFFICULTY_HARD: {'name': 'Тяжелый', 'path': ENEMY_PATH_SHORT_FINAL, 'waves': WAVES_HARD, 'lives': 20, 'money': 500},
 }
 
 
