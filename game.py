@@ -44,7 +44,7 @@ class Game:
         self.chosen_slot_rects = []
         self.all_tower_rects = []
         self.btn_selection_back = pygame.Rect(center_x - 100, SCREEN_HEIGHT - 80, 200, 60)
-        self.difficulty = DIFFICULTY_MEDIUM
+        self.difficulty = None
         self.difficulty_buttons = self.setup_difficulty_buttons(center_x, center_y)
         self.reset_game()
 
@@ -138,14 +138,11 @@ class Game:
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self.btn_start.collidepoint(event.pos):
                 if self.difficulty is None:
-                    self.draw_message("Сначала выберите сложность!")
                     self.state = "DIFFICULTY_SELECTION"
                     return
                 if len([t for t in self.chosen_tower_types if t is not None]) == self.NUM_SLOTS:
                     self.reset_game()
                     self.state = "GAME"
-                else:
-                    self.draw_message(f"Выберите {self.NUM_SLOTS} башни для начала игры.")
             elif self.btn_difficulty_select.collidepoint(event.pos):
                 self.state = "DIFFICULTY_SELECTION"
             elif self.btn_tower_select.collidepoint(event.pos):
@@ -202,11 +199,6 @@ class Game:
                     if cost > 0 and self.money >= cost:
                         self.money -= cost
                         tower.upgrade()
-                        self.draw_message(f"Башня улучшена до ур. {tower.level}!")
-                    elif cost == 0:
-                        self.draw_message("Макс. уровень достигнут!")
-                    else:
-                        self.draw_message("Недостаточно денег для улучшения!")
                 elif event.key == pygame.K_x:
                     self.sell_selected_tower()
             if event.key == pygame.K_SPACE:
@@ -267,7 +259,6 @@ class Game:
             if tower.type == TOWER_ARMY_BASE and tower.spawned_unit:
                 if tower.spawned_unit in self.allied_units:
                     self.allied_units.remove(tower.spawned_unit)
-            self.draw_message(f"Башня продана за ${sell_price}!")
     def handle_input(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -280,7 +271,6 @@ class Game:
             if cost > 0 and self.money >= cost:
                 self.money -= cost
                 tower.upgrade()
-                self.draw_message(f"Башня улучшена до ур. {tower.level}!")
             return
         if self.selected_tower_on_map and self.btn_sell and self.btn_sell.collidepoint(pos):
             self.sell_selected_tower()
@@ -307,8 +297,6 @@ class Game:
                 self.money -= tower_data['cost']
                 self.pending_tower_type = None
                 self.selected_tower_on_map = None
-            else:
-                self.draw_message("Not enough money!")
         else:
             clicked_tower = None
             for tower in self.towers:
@@ -381,7 +369,7 @@ class Game:
         if self.enemies or self.spawn_queue:
             return
         self.wave_number += 1
-        self.next_wave_timer -= 1 #поменял
+        self.next_wave_timer -= 1 
         if self.wave_number > len(self.waves):
             self.victory()
             return
@@ -441,9 +429,6 @@ class Game:
             if tr.colliderect(pygame.Rect(l, t, w, h).inflate(TOWER_SIZE / 2, TOWER_SIZE / 2)): return True
         return False
 
-    def draw_message(self, m):
-        print(m)
-
     def draw_menu(self):
         self.screen.fill((30, 30, 30))
         title = self.title_font.render("TOWER DEFENCE", True, GREEN)
@@ -452,11 +437,11 @@ class Game:
         diff_name = DIFFICULTY_SETTINGS.get(self.difficulty, {}).get('name', 'НЕ ВЫБРАНА')
         diff_color = WHITE
         if self.difficulty == DIFFICULTY_EASY:
-            diff_color = GREEN
+            diff_color = (50, 205, 50)
         elif self.difficulty == DIFFICULTY_MEDIUM:
-            diff_color = YELLOW
+            diff_color = (189, 183, 107)
         elif self.difficulty == DIFFICULTY_HARD:
-            diff_color = RED
+            diff_color = (220, 20, 60)
         diff_text = self.menu_font.render(f"Сложность: {diff_name}", True, diff_color)
         self.screen.blit(diff_text, diff_text.get_rect(center=(SCREEN_WIDTH // 2, 200)))
         game_ready = len([t for t in self.chosen_tower_types if t]) == self.NUM_SLOTS and self.difficulty is not None
@@ -529,8 +514,8 @@ class Game:
         mp = pygame.mouse.get_pos()
         for i, t_type in enumerate(self.all_tower_types):
             data = TOWERS[t_type][0]
-            col = i % 5
-            row = i // 5
+            col = i % 9
+            row = i // 9
             rect = pygame.Rect(sx + col * (iw + im), sy + row * (iw + im), iw, iw)
             self.all_tower_rects.append(rect)
             color = data['color']

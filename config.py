@@ -21,6 +21,7 @@ DARK_BLUE = (0, 0, 100)
 DARK_GRAY = (60, 60, 60)
 WIN_GREEN = (0, 150, 0)
 LAVA_COLOR = (255, 69, 0)
+BOSS1_COLOR = (331, 100, 44)
 PHANTOM_COLOR = (150, 150, 200)
 ARMORED_COLOR = (100, 100, 100)
 
@@ -99,12 +100,12 @@ TOWERS = {
     TOWER_FROST: [
         {'name': 'Заморозка', 'color': LIGHT_BLUE, 'damage': 1, 'range': 200, 'fire_rate': 10,
          'projectile_type': PROJECTILE_FROST, 'slow_factor': 0.5, 'slow_duration': 1 * FPS, 'upgrade_cost': 200, 'cost': 90},
-        {'name': 'Заморозка', 'color': LIGHT_BLUE, 'damage': 2, 'range': 220, 'fire_rate': 8,
+        {'name': 'Заморозка', 'color': LIGHT_BLUE, 'damage': 1, 'range': 220, 'fire_rate': 10,
          'projectile_type': PROJECTILE_FROST, 'slow_factor': 0.6, 'slow_duration': 1.5 * FPS, 'upgrade_cost': 400, 'cost': 90},
-        {'name': 'Заморозка', 'color': LIGHT_BLUE, 'damage': 5, 'range': 250, 'fire_rate': 6,
+        {'name': 'Заморозка', 'color': LIGHT_BLUE, 'damage': 1, 'range': 250, 'fire_rate': 8,
          'projectile_type': PROJECTILE_FROST, 'slow_factor': 0.7, 'slow_duration': 2 * FPS, 'upgrade_cost': 400, 'cost': 90},
-        {'name': 'Заморозка', 'color': LIGHT_BLUE, 'damage': 5, 'range': 250, 'fire_rate': 6,
-         'projectile_type': PROJECTILE_FROST, 'slow_factor': 0.8, 'slow_duration': 2.5 * FPS, 'upgrade_cost': 0, 'cost': 90},
+        {'name': 'Заморозка', 'color': LIGHT_BLUE, 'damage': 2, 'range': 250, 'fire_rate': 8,
+         'projectile_type': PROJECTILE_FROST, 'slow_factor': 0.8, 'slow_duration': 2 * FPS, 'upgrade_cost': 0, 'cost': 90},
     ],
 }
 
@@ -112,10 +113,10 @@ ENEMIES = {
     ENEMY_NORMAL: {'health': 15, 'speed': 1.0, 'color': GREEN, 'reward': 15},
     ENEMY_FAST: {'health': 10, 'speed': 2.0, 'color': YELLOW, 'reward': 10},
     ENEMY_TANK: {'health': 50, 'speed': 0.5, 'color': RED, 'reward': 25},
+    ENEMY_BOSS1: {'health': 500, 'speed': 1.5, 'color': BOSS1_COLOR, 'reward': 300},
     ENEMY_LAVA: {'health': 150, 'speed': 0.8, 'color': LAVA_COLOR, 'reward': 50, 'spawns_on_death': True, 'spawned_hp': 60},
     ENEMY_PHANTOM: {'health': 60, 'speed': 3.0, 'color': PHANTOM_COLOR, 'reward': 20, 'is_phantom': True},
-    ENEMY_ARMORED: {'health': 100, 'speed': 1.0, 'color': ARMORED_COLOR, 'reward': 40, 'is_armored': True},
-    ENEMY_BOSS1: {'health': 200, 'speed': 1.0, 'color': GREEN, 'reward': 150}
+    ENEMY_ARMORED: {'health': 100, 'speed': 1.0, 'color': ARMORED_COLOR, 'reward': 40, 'is_armored': True}
 }
 
 DIFFICULTY_EASY = 1
@@ -134,9 +135,10 @@ ENEMY_PATH_SHORT_FINAL = [
 WAVES_BASE = []
 WAVES_BASE.append([(ENEMY_NORMAL, 7), (ENEMY_FAST, 4)])  # 1
 WAVES_BASE.append([(ENEMY_NORMAL, 10),(ENEMY_TANK, 4)])  # 2
+WAVES_BASE.append([(ENEMY_TANK, 5), (ENEMY_NORMAL, 6), (ENEMY_FAST, 3), (ENEMY_BOSS1, 1)])
 WAVES_BASE.append([(ENEMY_TANK, 5), (ENEMY_FAST, 7)])  # 3
 WAVES_BASE.append([(ENEMY_TANK, 4), (ENEMY_PHANTOM, 3)])  # 4
-WAVES_BASE.append([(ENEMY_FAST, 5), (ENEMY_TANK, 5)])  # 5 в будущем босс
+WAVES_BASE.append([(ENEMY_TANK, 5), (ENEMY_NORMAL, 6), (ENEMY_FAST, 3), (ENEMY_BOSS1, 1)])  # 5 в будущем босс
 WAVES_BASE.append([(ENEMY_LAVA, 2), (ENEMY_PHANTOM, 5), (ENEMY_ARMORED, 3)])  # 6
 
 def generate_waves(base_waves, num_waves, scale_factor):
@@ -158,7 +160,7 @@ WAVES_HARD = generate_waves(WAVES_BASE, 40, 2)
 
 DIFFICULTY_SETTINGS = {
     DIFFICULTY_EASY: {'name': 'Легкий', 'path': ENEMY_PATH_STANDARD, 'waves': WAVES_EASY, 'lives': 30, 'money': 700},
-    DIFFICULTY_MEDIUM: {'name': 'Средний', 'path': ENEMY_PATH_STANDARD, 'waves': WAVES_MEDIUM, 'lives': 20, 'money': 500},
+    DIFFICULTY_MEDIUM: {'name': 'Средний', 'path': ENEMY_PATH_STANDARD, 'waves': WAVES_MEDIUM, 'lives': 20, 'money': 5000},
     DIFFICULTY_HARD: {'name': 'Тяжелый', 'path': ENEMY_PATH_SHORT_FINAL, 'waves': WAVES_HARD, 'lives': 20, 'money': 500},
 }
 
