@@ -461,7 +461,7 @@ class Game:
             self.screen.blit(t, t.get_rect(center=btn.center))
 
     def draw_difficulty_selection(self):
-        self.screen.fill(DARK_BLUE)
+        self.screen.fill((30, 30, 30))
         center_x = SCREEN_WIDTH // 2
         title = self.title_font.render("ВЫБОР СЛОЖНОСТИ", True, WHITE)
         self.screen.blit(title, title.get_rect(center=(center_x, 100)))
@@ -488,9 +488,10 @@ class Game:
             self.screen.blit(stats_text, stats_text.get_rect(center=(r.centerx, r.y + 55)))
         back_text = self.small_font.render("Нажмите [ESC] для возврата", True, GRAY)
         self.screen.blit(back_text, back_text.get_rect(center=(center_x, SCREEN_HEIGHT - 30)))
+
     def draw_tower_selection(self):
-        self.screen.fill(WHITE)
-        title = self.title_font.render("ВЫБОР БАШЕН", True, BLACK)
+        self.screen.fill((30, 30, 30))
+        title = self.title_font.render("ВЫБОР БАШЕН", True, WHITE)
         self.screen.blit(title, title.get_rect(center=(SCREEN_WIDTH // 2, 80)))
         sw, sm = 80, 30
         start_x = (SCREEN_WIDTH - (self.NUM_SLOTS * sw + (self.NUM_SLOTS - 1) * sm)) // 2
@@ -505,9 +506,9 @@ class Game:
                 data = TOWERS[t][0]
                 pygame.draw.circle(self.screen, data['color'], r.center, sw // 2 - 5)
             else:
-                txt = self.font.render(f"{i + 1}", True, BLACK)
+                txt = self.font.render(f"{i + 1}", True, WHITE)
                 self.screen.blit(txt, txt.get_rect(center=r.center))
-        lbl = self.font.render("Доступные башни", True, BLACK)
+        lbl = self.font.render("Доступные башни", True, WHITE)
         self.screen.blit(lbl, (50, 280))
         self.all_tower_rects = []
         iw, im, sx, sy = 70, 25, 50, 330
@@ -525,9 +526,9 @@ class Game:
             pygame.draw.rect(self.screen, BLACK, rect, 2, 5)
             pygame.draw.circle(self.screen, data['color'], rect.center, iw // 2 - 5)
             pygame.draw.circle(self.screen, BLACK, rect.center, iw // 2 - 5, 1)
-            name_text = self.small_font.render(data['name'], True, BLACK)
+            name_text = self.small_font.render(data['name'], True, WHITE)
             self.screen.blit(name_text, name_text.get_rect(center=(rect.centerx, rect.y - 15)))
-            price_text = self.small_font.render(f"${data['cost']}", True, BLACK)
+            price_text = self.small_font.render(f"${data['cost']}", True, WHITE)
             self.screen.blit(price_text, price_text.get_rect(center=(rect.centerx, rect.y + iw + 10)))
         col = (0, 100, 150)
         c = tuple([min(255, x + 50) for x in col]) if self.btn_selection_back.collidepoint(mp) else col

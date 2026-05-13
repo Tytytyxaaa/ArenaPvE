@@ -217,8 +217,6 @@ class Enemy:
         self.spawns_on_death = data.get('spawns_on_death', False)
         self.spawned_hp = data.get('spawned_hp', 0)
         self.is_armored = data.get('is_armored', False)
-        
-        
         self.invisible = self.is_phantom 
         self.invisibility_timer = 0
 
